@@ -41,7 +41,7 @@ x_train = x_train / 255
 x_test = x_test / 255
 
 
-#We want to have a binary classification: digit 0 is classified 1 and 
+#We want to have a binary classification: digit 0 is classified 1 and
 #all the other digits are classified 0
 
 y_new = np.zeros(y_train.shape)
@@ -57,7 +57,15 @@ num_classes = 1
 
 
 #Let start our work: creating a neural network
-#First, we just use a single neuron. 
+#First, we just use a single neuron.
 
-#####TO COMPLETE
+nb_epochs = 10
+batch_size = 128
 
+model = Sequential()
+model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal")) # ajoute un réseau de 1 neurone
+model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+model.summary()
+model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
+accuracy = model.evaluate(x_test, y_test, verbose=0)
+print("Accuracy : ", accuracy[0])
