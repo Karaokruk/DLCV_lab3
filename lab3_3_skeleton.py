@@ -63,23 +63,18 @@ def simpleNN(nb_epochs, batch_size):
     model.summary()
     model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
     accuracy = model.evaluate(x_test, y_test, verbose=0)
-    printStats(accuracy[1], accuracy[0], time.time() - begin_time)
+    printStats(accuracy[0], accuracy[1], time.time() - begin_time)
 
-def hidden64NN(nb_epochs, batch_size): # TODO
+def hidden64NN(nb_epochs, batch_size):
     begin_time = time.time()
     model = Sequential()
-    #model.add(Input(shape=(None,num_pixels)))
-    #model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="simple_layer"))
     model.add(Dense(64, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="hidden_64sized_layer"))
     model.add(Dense(10, input_dim=64, activation="sigmoid", kernel_initializer="normal"))
-    model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.compile(loss="binary_crossentropy", optimizer="Adam", metrics=["accuracy"])
     model.summary()
     model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
     accuracy = model.evaluate(x_test, y_test, verbose=0)
-    printStats(accuracy[1], accuracy[0], time.time() - begin_time)
-
-def alternativehidden64():
-    model = Model() # faut surement oublier Sequential pcq c'est lineaire (1 entree 1 sortie)
+    printStats(accuracy[0], accuracy[1], time.time() - begin_time)
 
 #Let start our work: creating a neural network
 #First, we just use a single neuron.
