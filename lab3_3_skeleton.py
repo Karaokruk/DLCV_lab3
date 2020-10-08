@@ -53,7 +53,7 @@ num_classes = y_train.shape[1]
 def printStats(loss, accuracy, time):
     print("Loss : {:.10f}".format(loss))
     print("Accuracy : {:.2f}%".format(accuracy * 100))
-    print("Total time : {:.2f}%s".format(time))
+    print("Total time : {:.2f}s".format(time))
 
 def simpleNN(nb_epochs, batch_size):
     begin_time = time.time()
