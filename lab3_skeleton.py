@@ -4,8 +4,10 @@ from __future__ import print_function
 #import tensorflow.keras
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras import Input
 import numpy as np
 
 #print('tensorflow:', tf.__version__)
@@ -29,6 +31,7 @@ import numpy as np
 # pass from (60000, 28, 28) to (60000, 784)
 #flatten images
 num_pixels = x_train.shape[1] * x_train.shape[2]
+print("Num pixels : ", num_pixels)
 x_train = x_train.reshape(x_train.shape[0], num_pixels)
 x_test = x_test.reshape(x_test.shape[0], num_pixels)
 
@@ -52,20 +55,37 @@ y_new = np.zeros(y_test.shape)
 y_new[np.where(y_test==0.0)[0]] = 1
 y_test = y_new
 
-
 num_classes = 1
 
+def simpleNN(nb_epochs, batch_size):
+    model = Sequential()
+    model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal"))
+    model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.summary()
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
+    accuracy = model.evaluate(x_test, y_test, verbose=0)
+    print("Accuracy : ", accuracy[1])
+
+def hidden64NN(nb_epochs, batch_size): # TODO
+    model = Sequential()
+    #model.add(Input(shape=(None,num_pixels)))
+    model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="simple_layer"))
+    #model.add(Dense(64, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="hidden_64sized_layer"))
+    model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.summary()
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
+    accuracy = model.evaluate(x_test, y_test, verbose=0)
+    print("Accuracy : ", accuracy[1])
+
+def laDerniereQuestionLol():
+    model = Model() # faut surement oublier Sequential pcq c'est lineaire (1 entree 1 sortie)
 
 #Let start our work: creating a neural network
 #First, we just use a single neuron.
 
-nb_epochs = 10
+nb_epochs = 5
 batch_size = 128
 
-model = Sequential()
-model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal")) # ajoute un réseau de 1 neurone
-model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
-model.summary()
-model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
-accuracy = model.evaluate(x_test, y_test, verbose=0)
-print("Accuracy : ", accuracy[0])
+#simpleNN(nb_epochs, batch_size)
+
+hidden64NN(nb_epochs, batch_size)
