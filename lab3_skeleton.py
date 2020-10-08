@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras import Input
 import numpy as np
+import time
 
 #print('tensorflow:', tf.__version__)
 #print('keras:', tensorflow.keras.__version__)
@@ -58,6 +59,7 @@ y_test = y_new
 num_classes = 1
 
 def simpleNN(nb_epochs, batch_size):
+    begin_time = time.time()
     model = Sequential()
     model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal"))
     model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
@@ -65,19 +67,25 @@ def simpleNN(nb_epochs, batch_size):
     model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
     accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Accuracy : ", accuracy[1])
+    print("Loss : ", accuracy[0])
+    print("Total time : ", time.time()-begin_time)
 
 def hidden64NN(nb_epochs, batch_size): # TODO
+    begin_time = time.time()
     model = Sequential()
     #model.add(Input(shape=(None,num_pixels)))
-    model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="simple_layer"))
-    #model.add(Dense(64, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="hidden_64sized_layer"))
+    #model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="simple_layer"))
+    model.add(Dense(64, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="hidden_64sized_layer"))
+    model.add(Dense(1, input_dim=64, activation="sigmoid", kernel_initializer="normal"))
     model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
     model.summary()
     model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
     accuracy = model.evaluate(x_test, y_test, verbose=0)
     print("Accuracy : ", accuracy[1])
+    print("Loss : ", accuracy[0])
+    print("Total time : ", time.time()-begin_time)
 
-def laDerniereQuestionLol():
+def alternativehidden64():
     model = Model() # faut surement oublier Sequential pcq c'est lineaire (1 entree 1 sortie)
 
 #Let start our work: creating a neural network
