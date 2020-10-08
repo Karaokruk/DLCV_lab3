@@ -6,6 +6,7 @@ from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import RMSprop
+import time
 
 
 #print('tensorflow:', tf.__version__)
@@ -49,8 +50,43 @@ y_test = tensorflow.keras.utils.to_categorical(y_test)
 num_classes = y_train.shape[1]
 
 
+def printStats(loss, accuracy, time):
+    print("Loss : {:.10f}".format(loss))
+    print("Accuracy : {:.2f}%".format(accuracy * 100))
+    print("Total time : {:.2f}%s".format(time))
+
+def simpleNN(nb_epochs, batch_size):
+    begin_time = time.time()
+    model = Sequential()
+    model.add(Dense(10, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal"))
+    model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.summary()
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
+    accuracy = model.evaluate(x_test, y_test, verbose=0)
+    printStats(accuracy[1], accuracy[0], time.time() - begin_time)
+
+def hidden64NN(nb_epochs, batch_size): # TODO
+    begin_time = time.time()
+    model = Sequential()
+    #model.add(Input(shape=(None,num_pixels)))
+    #model.add(Dense(1, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="simple_layer"))
+    model.add(Dense(64, input_dim=num_pixels, activation="sigmoid", kernel_initializer="normal", name="hidden_64sized_layer"))
+    model.add(Dense(10, input_dim=64, activation="sigmoid", kernel_initializer="normal"))
+    model.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.summary()
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=nb_epochs, batch_size=batch_size)
+    accuracy = model.evaluate(x_test, y_test, verbose=0)
+    printStats(accuracy[1], accuracy[0], time.time() - begin_time)
+
+def alternativehidden64():
+    model = Model() # faut surement oublier Sequential pcq c'est lineaire (1 entree 1 sortie)
 
 #Let start our work: creating a neural network
+#First, we just use a single neuron.
 
-#####TO COMPLETE
+nb_epochs = 100
+batch_size = 128
 
+simpleNN(nb_epochs, batch_size)
+
+hidden64NN(nb_epochs, batch_size)
